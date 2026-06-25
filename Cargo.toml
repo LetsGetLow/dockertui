@@ -1,0 +1,12 @@
+[workspace]
+resolver = "3"
+
+members = [
+    "frontend/cli",
+    "dockerservice",
+]
+
+[workspace.dependencies]
+async-trait = "0.1.89"
+tokio = { version = "1", features = ["full"] }
+tokio-macros = { version = "2.7"}
