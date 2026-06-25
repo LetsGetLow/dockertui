@@ -6,16 +6,19 @@ async fn main() {
     println!("Service Version: {}", service.version());
 
     for container in service.list_containers().await.unwrap() {
-        println!("ID: {}", container.id);
+        println!("ID: {}", container.id.unwrap_or_default());
         println!("Names: {:?}", container.names);
-        println!("Image: {}", container.image);
-        println!("ImageID: {}", container.image_id);
-        println!("Command: {}", container.command);
+        println!("Image: {}", container.image.unwrap_or_default());
+        println!("ImageID: {}", container.image_id.unwrap_or_default());
+        println!("Command: {}", container.command.unwrap_or_default());
         println!("Created: {:?}", container.created);
         println!("Ports: {:?}", container.ports);
         println!("SizeRW: {:?}", container.size_rw);
         println!("SizeRootFS: {:?}", container.size_root_fs);
+        println!("Lables: {:?}", container.labels);
+        println!("State: {:?}", container.state);
         println!("Status: {:?}", container.status);
+        println!("Mounts: {:?}", container.mounts);
         println!("---------------------------------------------------------");
     }
 }

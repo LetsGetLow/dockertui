@@ -1,24 +1,24 @@
-use crate::models::{ContainerInfo, Port, PortTypeEnum};
-use bollard::models::{ContainerSummary, PortSummary, PortSummaryTypeEnum};
+use crate::models::{ContainerInfo, MountPoint, Port, PortTypeEnum, StateEnum};
+use bollard::models::{ContainerSummary, ContainerSummaryStateEnum, MountPoint as BollardMountPoint, PortSummary, PortSummaryTypeEnum};
 
 impl From<ContainerSummary> for ContainerInfo {
     fn from(summary: ContainerSummary) -> Self {
         Self {
-            id: summary.id.unwrap_or_default(),
-            names: summary.names.unwrap_or_default(),
-            image: summary.image.unwrap_or_default(),
-            image_id: summary.image_id.unwrap_or_default(),
-            command: summary.command.unwrap_or_default(),
+            id: summary.id,
+            names: summary.names,
+            image: summary.image,
+            image_id: summary.image_id,
+            command: summary.command,
             created: summary.created,
             ports: summary
                 .ports
-                .unwrap_or_default()
-                .into_iter()
-                .map(|p| p.into())
-                .collect(),
+                .map(|p| p.into_iter().map(Into::into).collect()),
             size_rw: summary.size_rw,
             size_root_fs: summary.size_root_fs,
-            status: summary.status.unwrap_or_default(),
+            labels: summary.labels,
+            status: summary.status,
+            state: summary.state.map(|s| s.into()),
+            mounts: summary.mounts.map(|m| m.into_iter().map(|m| m.into()).collect()),
         }
     }
 }
@@ -41,6 +41,37 @@ impl From<PortSummaryTypeEnum> for PortTypeEnum {
             PortSummaryTypeEnum::TCP => PortTypeEnum::TCP,
             PortSummaryTypeEnum::UDP => PortTypeEnum::UDP,
             PortSummaryTypeEnum::SCTP => PortTypeEnum::SCTP,
+        }
+    }
+}
+
+impl From<ContainerSummaryStateEnum> for StateEnum {
+    fn from(state: ContainerSummaryStateEnum) -> Self {
+        match state {
+            ContainerSummaryStateEnum::EMPTY => StateEnum::EMPTY,
+            ContainerSummaryStateEnum::CREATED => StateEnum::CREATED,
+            ContainerSummaryStateEnum::RUNNING => StateEnum::RUNNING,
+            ContainerSummaryStateEnum::PAUSED => StateEnum::PAUSED,
+            ContainerSummaryStateEnum::RESTARTING => StateEnum::RESTARTING,
+            ContainerSummaryStateEnum::EXITED => StateEnum::EXITED,
+            ContainerSummaryStateEnum::REMOVING => StateEnum::REMOVING,
+            ContainerSummaryStateEnum::DEAD => StateEnum::DEAD,
+            ContainerSummaryStateEnum::STOPPING => StateEnum::STOPPING,
+        }
+    }
+}
+
+impl From<BollardMountPoint> for MountPoint {
+    fn from(mount: BollardMountPoint) -> Self {
+        Self {
+            typ: mount.typ,
+            name: mount.name,
+            source: mount.source,
+            destination: mount.destination,
+            driver: mount.driver,
+            mode: mount.mode,
+            rw: mount.rw,
+            propagation: mount.propagation,
         }
     }
 }
