@@ -1,6 +1,6 @@
-use crate::types::{Lables, MountPointType};
+use crate::types::{AnnotationsType, LablesType, MountPointType};
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Default)]
 pub struct ContainerInfo {
     pub id: Option<String>,
     pub names: Option<Vec<String>>,
@@ -11,16 +11,16 @@ pub struct ContainerInfo {
     pub ports: Option<Vec<Port>>,
     pub size_rw: Option<i64>,
     pub size_root_fs: Option<i64>,
-    pub labels: Option<Lables>,
+    pub labels: Option<LablesType>,
     pub state: Option<StateEnum>,
     pub status: Option<String>,
-    // pub host_config: Option<ContainerSummaryHostConfig>,
+    pub host_config: Option<HostConfig>,
     // pub network_settings: Option<ContainerSummaryNetworkSettings>,
     pub mounts: Option<Vec<MountPoint>>,
     // pub health: Option<ContainerSummaryHealth>
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Default)]
 pub struct Port {
     pub ip: Option<String>,
     pub private_port: u16,
@@ -28,7 +28,7 @@ pub struct Port {
     pub typ: Option<PortTypeEnum>,
 }
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum PortTypeEnum {
     EMPTY,
     TCP,
@@ -37,7 +37,7 @@ pub enum PortTypeEnum {
 }
 
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum StateEnum {
     EMPTY,
     CREATED,
@@ -50,7 +50,7 @@ pub enum StateEnum {
     STOPPING,
 }
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Default, Clone, PartialEq)]
 pub struct MountPoint {
     pub typ: Option<MountPointType>,
     pub name: Option<String>,
@@ -60,4 +60,10 @@ pub struct MountPoint {
     pub mode: Option<String>,
     pub rw: Option<bool>,
     pub propagation: Option<String>,
+}
+
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct HostConfig {
+    pub network_mode: Option<String>,
+    pub annotations: Option<AnnotationsType>
 }

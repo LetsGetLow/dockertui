@@ -1,5 +1,5 @@
-use crate::models::{ContainerInfo, MountPoint, Port, PortTypeEnum, StateEnum};
-use bollard::models::{ContainerSummary, ContainerSummaryStateEnum, MountPoint as BollardMountPoint, PortSummary, PortSummaryTypeEnum};
+use crate::models::{ContainerInfo, HostConfig, MountPoint, Port, PortTypeEnum, StateEnum};
+use bollard::models::{ContainerSummary, ContainerSummaryHostConfig, ContainerSummaryStateEnum, MountPoint as BollardMountPoint, PortSummary, PortSummaryTypeEnum};
 
 impl From<ContainerSummary> for ContainerInfo {
     fn from(summary: ContainerSummary) -> Self {
@@ -16,8 +16,9 @@ impl From<ContainerSummary> for ContainerInfo {
             size_rw: summary.size_rw,
             size_root_fs: summary.size_root_fs,
             labels: summary.labels,
-            status: summary.status,
             state: summary.state.map(|s| s.into()),
+            status: summary.status,
+            host_config: summary.host_config.map(|hc| hc.into()),
             mounts: summary.mounts.map(|m| m.into_iter().map(|m| m.into()).collect()),
         }
     }
@@ -72,6 +73,15 @@ impl From<BollardMountPoint> for MountPoint {
             mode: mount.mode,
             rw: mount.rw,
             propagation: mount.propagation,
+        }
+    }
+}
+
+impl From<ContainerSummaryHostConfig> for HostConfig {
+    fn from(config: ContainerSummaryHostConfig) -> Self {
+        Self {
+            network_mode: config.network_mode,
+            annotations: config.annotations,
         }
     }
 }
