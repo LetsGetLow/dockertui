@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use crate::types::{AnnotationsType, LabelsType, MountPointType};
 
 #[derive(Debug, Clone, Default)]
@@ -66,4 +67,35 @@ pub struct MountPoint {
 pub struct HostConfig {
     pub network_mode: Option<String>,
     pub annotations: Option<AnnotationsType>
+}
+
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct NetworkSettings {
+    pub networks: Option<HashMap<String, EndpointSettings>>,
+}
+
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct EndpointSettings {
+    pub ipam_config: Option<EndpointIpamConfig>,
+    pub links: Option<Vec<String>>,
+    pub mac_address: Option<String>,
+    pub aliases: Option<Vec<String>>,
+    pub driver_opts: Option<HashMap<String, String>>,
+    pub gw_priority: Option<i64>,
+    pub network_id: Option<String>,
+    pub endpoint_id: Option<String>,
+    pub gateway: Option<String>,
+    pub ip_address: Option<String>,
+    pub ip_prefix_len: Option<i64>,
+    pub ipv6_gateway: Option<String>,
+    pub global_ipv6_address: Option<String>,
+    pub global_ipv6_prefix_len: Option<i64>,
+    pub dns_names: Option<Vec<String>>,
+}
+
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct EndpointIpamConfig {
+    pub ipv4_address: Option<String>,
+    pub ipv6_address: Option<String>,
+    pub link_local_ips: Option<Vec<String>>,
 }

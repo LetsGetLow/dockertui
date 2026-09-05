@@ -1,5 +1,5 @@
-use crate::models::{ContainerInfo, HostConfig, MountPoint, Port, PortTypeEnum, StateEnum};
-use bollard::models::{ContainerSummary, ContainerSummaryHostConfig, ContainerSummaryStateEnum, MountPoint as BollardMountPoint, PortSummary, PortSummaryTypeEnum};
+use crate::models::{ContainerInfo, EndpointIpamConfig, EndpointSettings, HostConfig, MountPoint, NetworkSettings, Port, PortTypeEnum, StateEnum};
+use bollard::models::{ContainerSummary, ContainerSummaryHostConfig, ContainerSummaryNetworkSettings, ContainerSummaryStateEnum, EndpointIpamConfig as BollardEndpointIpamConfig, EndpointSettings as BollardEndpointSettings, MountPoint as BollardMountPoint, PortSummary, PortSummaryTypeEnum};
 
 impl From<ContainerSummary> for ContainerInfo {
     fn from(summary: ContainerSummary) -> Self {
@@ -82,6 +82,51 @@ impl From<ContainerSummaryHostConfig> for HostConfig {
         Self {
             network_mode: config.network_mode,
             annotations: config.annotations,
+        }
+    }
+}
+
+impl From<ContainerSummaryNetworkSettings> for NetworkSettings {
+    fn from(settings: ContainerSummaryNetworkSettings) -> Self {
+        Self {
+            networks: settings.networks.map(|networks| {
+                networks
+                    .into_iter()
+                    .map(|(name, network)| (name, network.into()))
+                    .collect()
+            }),
+        }
+    }
+}
+
+impl From<BollardEndpointSettings> for EndpointSettings {
+    fn from(settings: BollardEndpointSettings) -> Self {
+        Self {
+            ipam_config: settings.ipam_config.map(Into::into),
+            links: settings.links,
+            mac_address: settings.mac_address,
+            aliases: settings.aliases,
+            driver_opts: settings.driver_opts,
+            gw_priority: settings.gw_priority,
+            network_id: settings.network_id,
+            endpoint_id: settings.endpoint_id,
+            gateway: settings.gateway,
+            ip_address: settings.ip_address,
+            ip_prefix_len: settings.ip_prefix_len,
+            ipv6_gateway: settings.ipv6_gateway,
+            global_ipv6_address: settings.global_ipv6_address,
+            global_ipv6_prefix_len: settings.global_ipv6_prefix_len,
+            dns_names: settings.dns_names,
+        }
+    }
+}
+
+impl From<BollardEndpointIpamConfig> for EndpointIpamConfig {
+    fn from(config: BollardEndpointIpamConfig) -> Self {
+        Self {
+            ipv4_address: config.ipv4_address,
+            ipv6_address: config.ipv6_address,
+            link_local_ips: config.link_local_ips,
         }
     }
 }
