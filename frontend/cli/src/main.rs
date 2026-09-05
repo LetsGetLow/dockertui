@@ -1,4 +1,5 @@
-use dockerservice::{DockerServiceImpl, DockerService};
+use dockerservice::DockerServiceImpl;
+use dockerservice::prelude::*;
 
 #[tokio::main]
 async fn main() {

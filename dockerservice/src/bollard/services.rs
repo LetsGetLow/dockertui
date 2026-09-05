@@ -1,5 +1,5 @@
 use crate::models::ContainerInfo;
-use crate::DockerService;
+use crate::{ContainerService, SystemService};
 use crate::Result;
 use async_trait::async_trait;
 use bollard::Docker;
@@ -20,12 +20,14 @@ impl DockerServiceImpl {
     }
 }
 
-#[async_trait]
-impl DockerService for DockerServiceImpl {
+impl SystemService for DockerServiceImpl {
     fn version(&self) -> String {
         self.client.client_version().to_string()
     }
+}
 
+#[async_trait]
+impl ContainerService for DockerServiceImpl {
     async fn list_containers(&self) -> Result<Vec<ContainerInfo>> {
         Ok(self
             .client
