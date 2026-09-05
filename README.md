@@ -22,7 +22,7 @@ A terminal UI for Docker, written in Rust.
 
 - The terminal UI itself — no `ratatui`, no rendering, no key handling
 - Any operation beyond listing: start, stop, logs, exec, inspect
-- Tests
+- Tests on the conversion layer (the error mapping has them)
 
 ## Architecture
 
