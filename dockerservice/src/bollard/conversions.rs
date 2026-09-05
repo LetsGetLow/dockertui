@@ -19,6 +19,7 @@ impl From<ContainerSummary> for ContainerInfo {
             state: summary.state.map(|s| s.into()),
             status: summary.status,
             host_config: summary.host_config.map(|hc| hc.into()),
+            network_settings: summary.network_settings.map(|ns| ns.into()),
             mounts: summary.mounts.map(|m| m.into_iter().map(|m| m.into()).collect()),
         }
     }

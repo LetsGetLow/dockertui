@@ -19,6 +19,7 @@ async fn main() {
         println!("State: {:?}", container.state);
         println!("Status: {:?}", container.status);
         println!("Host-Config: {:?}", container.host_config);
+        println!("Network-Settings: {:?}", container.network_settings);
         println!("Mounts: {:?}", container.mounts);
         println!("---------------------------------------------------------");
     }

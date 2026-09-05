@@ -16,7 +16,7 @@ pub struct ContainerInfo {
     pub state: Option<StateEnum>,
     pub status: Option<String>,
     pub host_config: Option<HostConfig>,
-    // pub network_settings: Option<ContainerSummaryNetworkSettings>,
+    pub network_settings: Option<NetworkSettings>,
     pub mounts: Option<Vec<MountPoint>>,
     // pub health: Option<ContainerSummaryHealth>
 }
