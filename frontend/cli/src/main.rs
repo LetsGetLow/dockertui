@@ -15,7 +15,7 @@ async fn main() {
         println!("Ports: {:?}", container.ports);
         println!("SizeRW: {:?}", container.size_rw);
         println!("SizeRootFS: {:?}", container.size_root_fs);
-        println!("Lables: {:?}", container.labels);
+        println!("Labels: {:?}", container.labels);
         println!("State: {:?}", container.state);
         println!("Status: {:?}", container.status);
         println!("Host-Config: {:?}", container.host_config);

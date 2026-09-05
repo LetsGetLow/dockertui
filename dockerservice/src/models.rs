@@ -1,4 +1,4 @@
-use crate::types::{AnnotationsType, LablesType, MountPointType};
+use crate::types::{AnnotationsType, LabelsType, MountPointType};
 
 #[derive(Debug, Clone, Default)]
 pub struct ContainerInfo {
@@ -11,7 +11,7 @@ pub struct ContainerInfo {
     pub ports: Option<Vec<Port>>,
     pub size_rw: Option<i64>,
     pub size_root_fs: Option<i64>,
-    pub labels: Option<LablesType>,
+    pub labels: Option<LabelsType>,
     pub state: Option<StateEnum>,
     pub status: Option<String>,
     pub host_config: Option<HostConfig>,
