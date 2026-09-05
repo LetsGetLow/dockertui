@@ -9,7 +9,9 @@ A terminal UI for Docker, written in Rust.
 
 ## What works today
 
-- `DockerService` abstraction with `version()` and `list_containers()`
+- `ContainerService` / `SystemService` abstractions, bundled as `DockerService`
+- `ContainerFilter` for choosing which containers to list and whether to pay
+  for size information
 - A working adapter over [bollard](https://crates.io/crates/bollard), including the
   conversion from Docker's API types into this project's own models
 - A binary that connects to the local Docker daemon and prints container details

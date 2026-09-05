@@ -164,3 +164,20 @@ impl From<ContainerSummaryHealthStatusEnum> for HealthStatusEnum {
         }
     }
 }
+
+/// The value Docker's `status` filter uses for a state, where it has one.
+///
+/// Docker documents no filter value for every state we model, so this is
+/// `None` for the rest and the caller narrows those itself.
+pub(super) fn state_filter_value(state: &StateEnum) -> Option<&'static str> {
+    match state {
+        StateEnum::CREATED => Some("created"),
+        StateEnum::RESTARTING => Some("restarting"),
+        StateEnum::RUNNING => Some("running"),
+        StateEnum::REMOVING => Some("removing"),
+        StateEnum::PAUSED => Some("paused"),
+        StateEnum::EXITED => Some("exited"),
+        StateEnum::DEAD => Some("dead"),
+        StateEnum::EMPTY | StateEnum::STOPPING => None,
+    }
+}

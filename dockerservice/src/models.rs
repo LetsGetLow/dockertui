@@ -113,3 +113,35 @@ pub enum HealthStatusEnum {
     HEALTHY,
     UNHEALTHY,
 }
+
+/// Which containers to list, and how much work the daemon should do to answer.
+///
+/// The default asks for every container without sizes, which is what a list
+/// view wants.
+#[derive(Debug, Clone, Default)]
+pub struct ContainerFilter {
+    /// States to include. Empty means every state.
+    pub states: Vec<StateEnum>,
+    /// Ask the daemon to report `size_rw` and `size_root_fs`. This walks each
+    /// container's filesystem, so it is off unless asked for.
+    pub with_size: bool,
+}
+
+impl ContainerFilter {
+    /// Only containers that are up.
+    pub fn running() -> Self {
+        Self::states([StateEnum::RUNNING])
+    }
+
+    pub fn states(states: impl IntoIterator<Item = StateEnum>) -> Self {
+        Self {
+            states: states.into_iter().collect(),
+            ..Self::default()
+        }
+    }
+
+    pub fn with_size(mut self, with_size: bool) -> Self {
+        self.with_size = with_size;
+        self
+    }
+}

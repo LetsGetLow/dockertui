@@ -6,7 +6,7 @@ async fn main() {
     let service = DockerServiceImpl::new().unwrap();
     println!("Service Version: {}", service.version());
 
-    for container in service.list_containers().await.unwrap() {
+    for container in service.list_containers(Default::default()).await.unwrap() {
         println!("ID: {}", container.id.unwrap_or_default());
         println!("Names: {:?}", container.names);
         println!("Image: {}", container.image.unwrap_or_default());
