@@ -1,10 +1,12 @@
 pub(crate) mod traits;
 pub(crate) mod types;
 
+pub mod error;
+
 pub mod models;
 
 pub use traits::{ContainerService, DockerService, SystemService};
-pub use types::Result;
+pub use error::{Error, Result};
 
 /// Brings every service trait into scope at once.
 ///
