@@ -5,8 +5,8 @@ pub mod error;
 
 pub mod models;
 
-pub use traits::{ContainerService, DockerService, SystemService};
 pub use error::{Error, Result};
+pub use traits::{ContainerService, DockerService, SystemService};
 
 /// Brings every service trait into scope at once.
 ///

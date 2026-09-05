@@ -1,7 +1,7 @@
 use super::conversions::state_filter_value;
+use crate::Result;
 use crate::models::{ContainerFilter, ContainerInfo};
 use crate::{ContainerService, SystemService};
-use crate::Result;
 use async_trait::async_trait;
 use bollard::Docker;
 use bollard::query_parameters::ListContainersOptionsBuilder;
@@ -38,7 +38,11 @@ impl ContainerService for DockerServiceImpl {
             .all(true)
             .size(filter.with_size);
 
-        let statuses: Vec<&str> = filter.states.iter().filter_map(state_filter_value).collect();
+        let statuses: Vec<&str> = filter
+            .states
+            .iter()
+            .filter_map(state_filter_value)
+            .collect();
         if !statuses.is_empty() {
             options = options.filters(&HashMap::from([("status", statuses)]));
         }
@@ -54,9 +58,7 @@ impl ContainerService for DockerServiceImpl {
         // Docker has no filter value for every state we model, so narrow what
         // it could not rather than hand back more than was asked for.
         if !filter.states.is_empty() {
-            containers.retain(|c| {
-                c.state.as_ref().is_some_and(|s| filter.states.contains(s))
-            });
+            containers.retain(|c| c.state.as_ref().is_some_and(|s| filter.states.contains(s)));
         }
 
         Ok(containers)
