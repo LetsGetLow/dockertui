@@ -1,5 +1,14 @@
-use crate::models::{ContainerInfo, EndpointIpamConfig, EndpointSettings, HostConfig, MountPoint, NetworkSettings, Port, PortTypeEnum, StateEnum};
-use bollard::models::{ContainerSummary, ContainerSummaryHostConfig, ContainerSummaryNetworkSettings, ContainerSummaryStateEnum, EndpointIpamConfig as BollardEndpointIpamConfig, EndpointSettings as BollardEndpointSettings, MountPoint as BollardMountPoint, PortSummary, PortSummaryTypeEnum};
+use crate::models::{
+    ContainerInfo, ContainerSummaryHealth, EndpointIpamConfig, EndpointSettings, HealthStatusEnum,
+    HostConfig, MountPoint, NetworkSettings, Port, PortTypeEnum, StateEnum,
+};
+use bollard::models::{
+    ContainerSummary, ContainerSummaryHealth as BollardContainerSummaryHealth,
+    ContainerSummaryHealthStatusEnum, ContainerSummaryHostConfig, ContainerSummaryNetworkSettings,
+    ContainerSummaryStateEnum, EndpointIpamConfig as BollardEndpointIpamConfig,
+    EndpointSettings as BollardEndpointSettings, MountPoint as BollardMountPoint, PortSummary,
+    PortSummaryTypeEnum,
+};
 
 impl From<ContainerSummary> for ContainerInfo {
     fn from(summary: ContainerSummary) -> Self {
@@ -20,7 +29,10 @@ impl From<ContainerSummary> for ContainerInfo {
             status: summary.status,
             host_config: summary.host_config.map(|hc| hc.into()),
             network_settings: summary.network_settings.map(|ns| ns.into()),
-            mounts: summary.mounts.map(|m| m.into_iter().map(|m| m.into()).collect()),
+            mounts: summary
+                .mounts
+                .map(|m| m.into_iter().map(|m| m.into()).collect()),
+            health: summary.health.map(|h| h.into()),
         }
     }
 }
@@ -128,6 +140,27 @@ impl From<BollardEndpointIpamConfig> for EndpointIpamConfig {
             ipv4_address: config.ipv4_address,
             ipv6_address: config.ipv6_address,
             link_local_ips: config.link_local_ips,
+        }
+    }
+}
+
+impl From<BollardContainerSummaryHealth> for ContainerSummaryHealth {
+    fn from(health: BollardContainerSummaryHealth) -> Self {
+        Self {
+            status: health.status.map(|s| s.into()),
+            failing_streak: health.failing_streak,
+        }
+    }
+}
+
+impl From<ContainerSummaryHealthStatusEnum> for HealthStatusEnum {
+    fn from(status: ContainerSummaryHealthStatusEnum) -> Self {
+        match status {
+            ContainerSummaryHealthStatusEnum::EMPTY => HealthStatusEnum::EMPTY,
+            ContainerSummaryHealthStatusEnum::NONE => HealthStatusEnum::NONE,
+            ContainerSummaryHealthStatusEnum::STARTING => HealthStatusEnum::STARTING,
+            ContainerSummaryHealthStatusEnum::HEALTHY => HealthStatusEnum::HEALTHY,
+            ContainerSummaryHealthStatusEnum::UNHEALTHY => HealthStatusEnum::UNHEALTHY,
         }
     }
 }

@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use crate::types::{AnnotationsType, LabelsType, MountPointType};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Default)]
 pub struct ContainerInfo {
@@ -18,7 +18,7 @@ pub struct ContainerInfo {
     pub host_config: Option<HostConfig>,
     pub network_settings: Option<NetworkSettings>,
     pub mounts: Option<Vec<MountPoint>>,
-    // pub health: Option<ContainerSummaryHealth>
+    pub health: Option<ContainerSummaryHealth>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -34,9 +34,8 @@ pub enum PortTypeEnum {
     EMPTY,
     TCP,
     UDP,
-    SCTP
+    SCTP,
 }
-
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum StateEnum {
@@ -66,7 +65,7 @@ pub struct MountPoint {
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct HostConfig {
     pub network_mode: Option<String>,
-    pub annotations: Option<AnnotationsType>
+    pub annotations: Option<AnnotationsType>,
 }
 
 #[derive(Debug, Default, Clone, PartialEq)]
@@ -98,4 +97,19 @@ pub struct EndpointIpamConfig {
     pub ipv4_address: Option<String>,
     pub ipv6_address: Option<String>,
     pub link_local_ips: Option<Vec<String>>,
+}
+
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct ContainerSummaryHealth {
+    pub status: Option<HealthStatusEnum>,
+    pub failing_streak: Option<i64>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum HealthStatusEnum {
+    EMPTY,
+    NONE,
+    STARTING,
+    HEALTHY,
+    UNHEALTHY,
 }
