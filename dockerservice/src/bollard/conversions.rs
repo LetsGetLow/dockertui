@@ -169,7 +169,7 @@ impl From<ContainerSummaryHealthStatusEnum> for HealthStatusEnum {
 ///
 /// Docker documents no filter value for every state we model, so this is
 /// `None` for the rest and the caller narrows those itself.
-pub(super) fn state_filter_value(state: &StateEnum) -> Option<&'static str> {
+pub(super) fn status_filter_value(state: &StateEnum) -> Option<&'static str> {
     match state {
         StateEnum::CREATED => Some("created"),
         StateEnum::RESTARTING => Some("restarting"),
@@ -607,7 +607,7 @@ mod tests {
         ];
 
         for (state, expected) in pairs {
-            assert_eq!(state_filter_value(&state), Some(expected), "{state:?}");
+            assert_eq!(status_filter_value(&state), Some(expected), "{state:?}");
         }
     }
 
@@ -616,7 +616,7 @@ mod tests {
         // Handing the daemon a made-up filter value would make it reject the
         // whole request, so these have to come back as `None` for the caller
         // to narrow itself.
-        assert_eq!(state_filter_value(&StateEnum::EMPTY), None);
-        assert_eq!(state_filter_value(&StateEnum::STOPPING), None);
+        assert_eq!(status_filter_value(&StateEnum::EMPTY), None);
+        assert_eq!(status_filter_value(&StateEnum::STOPPING), None);
     }
 }

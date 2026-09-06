@@ -1,4 +1,4 @@
-use super::conversions::state_filter_value;
+use super::conversions::status_filter_value;
 use crate::Result;
 use crate::models::{ContainerFilter, ContainerInfo};
 use crate::{ContainerService, SystemService};
@@ -41,7 +41,7 @@ impl ContainerService for DockerServiceImpl {
         let statuses: Vec<&str> = filter
             .states
             .iter()
-            .filter_map(state_filter_value)
+            .filter_map(status_filter_value)
             .collect();
         if !statuses.is_empty() {
             options = options.filters(&HashMap::from([("status", statuses)]));
