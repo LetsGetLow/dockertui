@@ -17,12 +17,16 @@ A terminal UI for Docker, written in Rust.
 - A binary that connects to the local Docker daemon and prints container details
 - A concrete `Error` enum describing situations a UI reacts to differently
   (daemon unreachable, permission denied, not found, conflict, timeout, …)
+- 40 tests over the adapter: the type conversions, the error mapping, and the
+  two decisions behind listing — what the daemon is asked for, and what is kept
+  of its answer. None of them need a running daemon.
 
 ## What does not exist yet
 
 - The terminal UI itself — no `ratatui`, no rendering, no key handling
 - Any operation beyond listing: start, stop, logs, exec, inspect
-- Tests on the conversion layer (the error mapping has them)
+- Any test that talks to a real daemon, so nothing checks that Docker still
+  accepts the filter values this crate sends
 
 ## Architecture
 
@@ -48,11 +52,11 @@ The frontend depends on the `DockerService` trait, never on `bollard`:
 
 ```rust
 #[async_trait]
-pub trait ContainerService {
-    async fn list_containers(&self) -> Result<Vec<ContainerInfo>>;
+pub trait ContainerService: Send + Sync {
+    async fn list_containers(&self, filter: ContainerFilter) -> Result<Vec<ContainerInfo>>;
 }
 
-pub trait SystemService {
+pub trait SystemService: Send + Sync {
     fn version(&self) -> String;
 }
 
@@ -93,7 +97,7 @@ cargo run -p dockertui
 1. `ratatui`-based interface: container list, selection, live status
 2. Container actions — start, stop, restart, remove
 3. Log streaming
-4. Tests on the conversion layer, which is testable without a running daemon
+4. Integration tests against a real daemon, covering what the unit tests cannot
 5. Images, volumes, networks
 
 ## Why this exists
